@@ -1,32 +1,19 @@
-async function enterWorkout() {
-    let target = document.getElementById("target").value;
-    let name = document.getElementById("name").value;
-    let sets = document.getElementById("sets").value;
-    let reps = document.getElementById("reps").value;
-    let options = {
-        method: "post",
-        body: JSON.stringify({ target, name, sets, reps }),
-        headers: { "Content-Type": "application/json" }
-    };
-    const response = await fetch("/api/storeWorkout", options);
-    const data = await response.json();
-    console.log(data);
-    location.reload();
-}
-
-async function getAllWorkouts() {
-    let options = {
+async function show(query) {
+    const url = `/api/${query}`;
+    const options = {
         method: "get",
         headers: { "Content-Type": "application/json" }
     };
-    const response = await fetch("/api/allWorkouts", options);
+    const response = await fetch(url);
     const data = await response.json();
-    console.log(data);
-    let host = document.getElementById("all");
-    for (let w of data) {
+    let host = document.getElementById("divOutput");
+    let target = data[0].target;
+    target = target.charAt(0).toUpperCase() + target.slice(1);    
+    host.innerHTML = `<h2><u>${target}</u></h2>`;
+    for (let workout of data) {
         let p = document.createElement("p");
-        p.textContent = `${w.target}, ${w.name}, ${w.sets}x${w.reps}`;
+        p.innerHTML = `<b>${workout.reps}x${workout.sets}</b> ${workout.name}`;
         host.appendChild(p);
     }
-    document.getElementById("name").focus();
 }
+
