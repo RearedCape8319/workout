@@ -18,7 +18,7 @@ const workouts = new Datastore({ filename: "data/workouts.db", autoload: true })
 // Define get and post requests for database management
 app.get("/api/allWorkouts", (request, response) => {
     console.log("Giving all workouts");
-    workouts.find({}).sort({ target: 1 }).exec((err, docs) => {
+    workouts.find({}).sort({ target: 1, timestamp: 1 }).exec((err, docs) => {
         if (err != null) {
             console.log("Error retrieving all workouts");
         } else {
@@ -29,6 +29,7 @@ app.get("/api/allWorkouts", (request, response) => {
 
 app.post("/api/storeWorkout", (request, response) => {
     let data = request.body;
+    data.timestamp = Date.now();
     workouts.insert(data, (err, newDoc) => {
         if (err != null) {
             console.log("Error storing to database!", err);
@@ -37,6 +38,11 @@ app.post("/api/storeWorkout", (request, response) => {
             response.json({ message: "Success!", record: newDoc });
         }
     });
+    workouts.loadDatabase((err) => {
+        if (err != null) {
+            console.log("Error loading database!", err);
+        }
+    })
 });
 
 

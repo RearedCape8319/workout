@@ -11,6 +11,7 @@ async function enterWorkout() {
     const response = await fetch("/api/storeWorkout", options);
     const data = await response.json();
     console.log(data);
+    location.reload();
 }
 
 async function getAllWorkouts() {
@@ -27,4 +28,5 @@ async function getAllWorkouts() {
         p.textContent = `${w.target}, ${w.name}, ${w.sets}x${w.reps}`;
         host.appendChild(p);
     }
+    document.getElementById("name").focus();
 }
